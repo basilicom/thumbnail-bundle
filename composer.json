@@ -1,0 +1,44 @@
+{
+  "name": "basilicom/thumbnail-bundle",
+  "license": "GPL-3.0-or-later",
+  "type": "pimcore-bundle",
+  "description": "This Bundle provides asynchronous thumbnail creation for Pimcore.",
+  "keywords": ["pimcore","thumbnail","async"],
+  "homepage": "https://basilicom.de",
+  "authors": [
+    {
+      "name": "Christoph Luehr",
+      "email": "christoph.luehr@basilicom.de"
+    },
+    {
+      "name": "Basilicom GmbH",
+      "homepage": "https://basilicom.de"
+    }
+  ],
+  "config": {
+    "sort-packages": true
+  },
+  "require": {
+    "pimcore/pimcore": ">=5.4 <6.3",
+    "symfony/messenger": "^4.3",
+    "php-amqplib/rabbitmq-bundle": "^1.14"
+  },
+  "require-dev": {
+    "codeception/codeception": "^2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Basilicom\\ThumbnailBundle\\": ""
+    },
+    "exclude-from-classmap": [
+      "tests",
+    ]
+  },
+  "extra": {
+    "pimcore": {
+      "bundles": [
+        "CustomerManagementFrameworkBundle\\PimcoreCustomerManagementFrameworkBundle"
+      ]
+    }
+  }
+}

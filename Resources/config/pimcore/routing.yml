@@ -1,0 +1,5 @@
+basilicom_thumbnail:
+    resource: "@BasilicomThumbnailBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
