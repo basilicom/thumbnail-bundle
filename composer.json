@@ -28,16 +28,16 @@
   },
   "autoload": {
     "psr-4": {
-      "Basilicom\\ThumbnailBundle\\": ""
+      "Basilicom\\ThumbnailBundle\\": "."
     },
     "exclude-from-classmap": [
-      "tests",
+      "Tests"
     ]
   },
   "extra": {
     "pimcore": {
       "bundles": [
-        "CustomerManagementFrameworkBundle\\PimcoreCustomerManagementFrameworkBundle"
+        "Basilicom\\ThumbnailBundle\\BasilicomThumbnailBundle"
       ]
     }
   }

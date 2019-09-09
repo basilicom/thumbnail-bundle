@@ -13,15 +13,15 @@ class ThumbnailHandler implements MessageHandlerInterface
 {
     public function __invoke(ThumbnailJob $message)
     {
-        Logger::debug('BTB Reveived ThumbnailJob with asset ID'.$message->getAssetId());
+        Logger::debug('BTB Received ThumbnailJob with assetId '.$message->getAssetId());
 
         $asset = Asset::getById($message->getAssetId());
 
-        if (!is_object($asset)) {
+        if (! $asset instanceof Asset\Image) {
             return;
         }
 
-        // clear placeholders
+        // clear placeholder
         $asset->clearThumbnail(ThumbnailConfig::getPreviewConfig()->getName());
 
         // system thumbnail format
@@ -40,7 +40,7 @@ class ThumbnailHandler implements MessageHandlerInterface
             if (is_object($thumbnailConfig)) {
                 $asset->clearThumbnail($thumbnailConfig->getName());
                 $path = $asset->getThumbnail($thumbnailConfig)->getFileSystemPath();
-                Logger::debug('BTB Generated thumbnail ['.$thumbnailConfigName.'] for asset ID '
+                Logger::debug('BTB Generated thumbnail ['.$thumbnailConfigName.'] for assetId '
                     . $message->getAssetId()
                     . ' Path:' .$path);
             }

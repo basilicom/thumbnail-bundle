@@ -24,8 +24,13 @@ class ThumbnailCommand extends AbstractCommand
     protected function configure()
     {
         $this->setName('basilicom:thumbnail')
-            ->setDescription('Generates missing Thumbnails')
-            ->setHelp('this command generates thumbnails');
+            ->setDescription('Generates missing thumbnails by dispatching ThumbnailJob messages')
+            ->setHelp('This command generates thumbnails')
+            ->addArgument(
+                'assetId',
+                InputArgument::REQUIRED,
+                'The asset ID'
+            );
     }
 
     /**
@@ -34,16 +39,13 @@ class ThumbnailCommand extends AbstractCommand
      *
      * @return int|null|void
      *
-     * @example bin/console basilicom:thumbnail
-     *
-     * - is the input file in expected format:
-     *     does it have a column 'key'
-     *     are there any fields that pimcore doesn't know about
+     * @example bin/console basilicom:thumbnail <assetId>
      *
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->bus->dispatch(new ThumbnailJob(1));
-        $output->writeln('thumbnail creation');
+        $assetId = $input->getArgument('assetId');
+        $this->bus->dispatch(new ThumbnailJob((int)$assetId));
+        $output->writeln('Dispatched ThumbnailJob for assetId='.$assetId);
     }
 }

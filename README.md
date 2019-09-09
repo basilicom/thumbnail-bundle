@@ -25,7 +25,7 @@ GPLv3 - see: gpl-3.0.txt
   generating system thumbnails, change `vendor/pimcore/pimcore/models/Asset/Image.php`,
   in method `update` the line `$path = $this->getThumbnail(Image\Thumbnail\Config::getPreviewConfig())->getFileSystemPath();` to
   `$path = $this->getThumbnail(Image\Thumbnail\Config::getPreviewConfig())->getFileSystemPath(true);`
-1) Disable low quality previwew generation:
+1) Disable low quality preview generation:
 ```yaml
     # app/config/config.yml - 'pimcore' section:
     assets:
