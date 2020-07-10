@@ -2,20 +2,33 @@
 
 Enables asynchronous, worker based thumbnail creation.
 
+Adding a lot of high resolution images to a Pimcore 
+system can cause high load situations. This is mitigated
+by deferring thumbnail creation via jobs.
+
+If a new asset is added to the system, the normal instant
+thumbnail generation is prevented and a default placeholder
+thumbnail is added instead. Simultaneously, a thumbnail
+creation job is added for the Symfony messenger component.
+Once the message is processed, the placeholder image is
+being replaced with the correct thumbnail.
+
 ## License
 
 GPLv3 - see: gpl-3.0.txt
 
-
 ## Requirements
 
-* Pimcore >= 5.4.0
-* RabbitMQ (for ampq on PHP 7.3 see: https://github.com/pdezwart/php-amqp/issues/337)
-
+* Pimcore >= 6.0.0
+* RabbitMQ if using the rabbitmq transport 
+  (for ampq on PHP 7.3 see: https://github.com/pdezwart/php-amqp/issues/337)
+* php-redis >= 4.3 if using the redis transport
+* redis server >= 4.3 if using the redis transport (needs XREADGROUP support)
 
 ## Installation
 
 1) Install the bundle using composer `composer require basilicom/thumbnail-bundle`.
+3) Configure the bundle (see below)
 2) Execute `bin/console pimcore:bundle:enable BasilicomThumbnailBundle`.
 
 
@@ -27,11 +40,12 @@ GPLv3 - see: gpl-3.0.txt
   `$path = $this->getThumbnail(Image\Thumbnail\Config::getPreviewConfig())->getFileSystemPath(true);`
 1) Disable low quality preview generation:
 ```yaml
-    # app/config/config.yml - 'pimcore' section:
-    assets:
-        image:
-            low_quality_image_preview:
-                enabled: false
+    # app/config/config.yml
+    pimcore:
+        assets:
+            image:
+                low_quality_image_preview:
+                   enabled: false
 ```
 2) Configure the Symfony Messenger (see https://symfony.com/doc/current/messenger.html).
 ```yaml
@@ -41,12 +55,12 @@ GPLv3 - see: gpl-3.0.txt
             transports:
                 #sample format:
                 #async: "%env(MESSENGER_TRANSPORT_DSN)%"
-                #redis (seems not to work, problems with timeouts?):
-                #async: "redis://redis:6379/messages"
+                # sample redis transport, tested: 
+                async: "redis://redis:6379/messages"
                 #doctrine does not work on pimcore, as only dbal is loaded, not doctrine!
                 #async: "doctrine://default"
-                #rabbitmq - works!:
-                async: "amqp://rabbitmq:rabbitmq@rabbitmq:5672/%2f/messages"
+                # sample rabbitmq, tested:
+                #async: "amqp://rabbitmq:rabbitmq@rabbitmq:5672/%2f/messages"
             routing:
                 # async is whatever name you gave your transport above
                 'Basilicom\ThumbnailBundle\Message\ThumbnailJob':  async
@@ -57,7 +71,9 @@ GPLv3 - see: gpl-3.0.txt
                     middleware:
                         - validation
 ```
-3) Process async messenges (jobs) via console (or supervisord, see: https://symfony.com/doc/current/messenger.html)
+3) Process async messenges (jobs) via console 
+  (or supervisord, see: https://symfony.com/doc/current/messenger.html)
+  add ``-vv`` to see individually processed messages
 ```
     bin/console messenger:consume
 ```

@@ -19,9 +19,9 @@
     "sort-packages": true
   },
   "require": {
-    "pimcore/pimcore": ">=5.4 <6.3",
+    "pimcore/pimcore": ">=6.0 <7.0",
     "symfony/messenger": "^4.3",
-    "php-amqplib/rabbitmq-bundle": "^1.14"
+    "ext-redis": "^4.3"
   },
   "require-dev": {
     "codeception/codeception": "^2.2"

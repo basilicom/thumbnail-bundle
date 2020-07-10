@@ -14,11 +14,4 @@ class BasilicomThumbnailBundle extends AbstractPimcoreBundle
         ];
     }
 
-    /**
-     * @return Installer
-     */
-    public function getInstaller()
-    {
-        return new Installer();
-    }
 }
